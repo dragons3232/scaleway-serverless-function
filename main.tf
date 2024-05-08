@@ -45,6 +45,29 @@ provider "scaleway" {
   zone = "fr-par-1"
 }
 
+// MNQ Nats
+
+resource "scaleway_mnq_nats_account" "hello" {
+  name = "nats-acc-hello"
+  project_id = var.project_id
+}
+
+resource "scaleway_mnq_nats_credentials" "hello" {
+  name       = "nats-hello-creds"
+  account_id = scaleway_mnq_nats_account.hello.id
+}
+
+resource "local_file" "nats_credential" {
+  content         = scaleway_mnq_nats_credentials.hello.file
+  filename        = "nats.creds"
+  file_permission = 644
+}
+
+output "nats_url" {
+  value       = scaleway_mnq_nats_account.hello.endpoint
+  description = "NATS url to use with the producer script"
+}
+
 // Function
 data "archive_file" "function_zip" {
   type        = "zip"
@@ -78,4 +101,14 @@ resource "scaleway_function" "hello" {
   }
 
   depends_on = [data.archive_file.function_zip]
+}
+
+resource "scaleway_function_trigger" "hello" {
+  function_id = scaleway_function.hello.id
+  name        = "hello-nats-trigger"
+  nats {
+    account_id = scaleway_mnq_nats_account.hello.id
+    subject    = "hello-nats"
+    project_id = var.project_id
+  }
 }

@@ -13,6 +13,7 @@ rm -rf dist && npm run build && mv node_modules dist
 cp package.json dist
 cd ..
 
+# terraform import scaleway_mnq_nats_account.hello fr-par/ADF4I5MCJDLJXULXO2CWTKMRXQH3MWAGP3UCBUVQ3X3W3ANCBPAWU57I
 # terraform init
 # terraform plan
 terraform apply
