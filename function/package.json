@@ -4,6 +4,7 @@
   "description": "Scaleway serverless function with Terraform and Nats",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/test.ts",
     "build": "npx tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
